@@ -135,6 +135,9 @@ PKG_CHECK_MODULES([gnutls], [gnutls >= 3.3 nettle], [
     LIBS=$save_LIBS
 ])
 
+# OpenSSL for SHA-1
+PKG_CHECK_MODULES([openssl], [libcrypto])
+
 AC_ARG_ENABLE([recvmmsg],
    AS_HELP_STRING([--enable-recvmmsg=auto|yes|no], [enable recvmmsg() network API [default=auto]]),
    [], [enable_recvmmsg=auto])
@@ -552,6 +555,7 @@ result_msg_base="  $PACKAGE $VERSION
     LIBS:     ${LIBS} ${LDFLAGS}
     LibURCU:  ${liburcu_LIBS} ${liburcu_CFLAGS}
     GnuTLS:   ${gnutls_LIBS} ${gnutls_CFLAGS}
+    OpenSSL:  ${openssl_LIBS} ${openssl_CFLAGS}
     Libedit:  ${libedit_LIBS} ${libedit_CFLAGS}
     LMDB:     ${enable_lmdb} ${lmdb_LIBS} ${lmdb_CFLAGS}
     Config:   ${conf_mapsize} MiB mapsize

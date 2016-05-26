@@ -10,7 +10,8 @@ AM_CPPFLAGS = \
 	-I$(srcdir)/lib \
 	-I$(srcdir)/lib/dnssec \
 	-I$(top_srcdir)/src \
-	$(gnutls_CFLAGS)
+	$(gnutls_CFLAGS) \
+	$(openssl_CFLAGS)
 
 noinst_LTLIBRARIES = libshared.la
 lib_LTLIBRARIES = libdnssec.la
@@ -40,6 +41,7 @@ libdnssec_la_CPPFLAGS = \
 
 libdnssec_la_LDFLAGS = \
 	$(gnutls_LIBS) \
+	$(openssl_LIBS) \
 	$(libdnssec_VERSION_INFO)
 
 libdnssec_la_LIBADD = \
