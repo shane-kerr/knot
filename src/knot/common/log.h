@@ -57,6 +57,13 @@ typedef enum {
 	LOG_FLAG_NOINFO      = 1 << 1  /*!< Don't print info level prefix. */
 } log_flag_t;
 
+/*! \brief Events to be logged structuredly into systemd. */
+typedef enum {
+        LOG_EVENT_DNSSEC_PUBLISH  = 0,
+        LOG_EVENT_DNSSEC_REMOVE   = 1,
+        LOG_EVENT_DNSSEC_SUBMIT   = 2,
+} log_structured_event_t;
+
 /*!
  * \brief Setup logging subsystem.
  */
@@ -167,6 +174,16 @@ __attribute__((format(printf, 4, 5)));
 #define log_zone_str_notice(zone, msg, ...)  log_fmt_zone_str(LOG_NOTICE,  LOG_SOURCE_ZONE, zone, msg, ##__VA_ARGS__)
 #define log_zone_str_info(zone, msg, ...)    log_fmt_zone_str(LOG_INFO,    LOG_SOURCE_ZONE, zone, msg, ##__VA_ARGS__)
 #define log_zone_str_debug(zone, msg, ...)   log_fmt_zone_str(LOG_DEBUG,   LOG_SOURCE_ZONE, zone, msg, ##__VA_ARGS__)
+
+/*!
+ * \brief Special structured logging into systemd for specific actions.
+ *
+ * \param zone        Zone name.
+ * \param event       Type of event to be logged.
+ * \param param       Additional information to the event in format "<NAME>=%s", or NULL.
+ * \param param_value Value for the parameter.
+ */
+void log_structured(const knot_dname_t *zone, log_structured_event_t event, const char *param, const char *param_value);
 
 /*!
  * \brief Update open files ownership.

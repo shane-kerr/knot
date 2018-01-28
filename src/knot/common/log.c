@@ -53,6 +53,12 @@ typedef struct {
 /*! Log singleton. */
 log_t *s_log = NULL;
 
+static const char *events_table[] = {
+	[LOG_EVENT_DNSSEC_PUBLISH]   = "DNSSEC,publish",
+	[LOG_EVENT_DNSSEC_REMOVE]    = "DNSSEC,remove",
+	[LOG_EVENT_DNSSEC_SUBMIT]    = "DNSSEC,submit",
+};
+
 static bool log_isopen(void)
 {
 	return s_log != NULL;
@@ -372,6 +378,23 @@ void log_fmt_zone_str(int priority, log_source_t src, const char *zone,
 	va_start(args, fmt);
 	log_msg_text(priority, src, zone, fmt, args);
 	va_end(args);
+}
+
+void log_structured(const knot_dname_t *zone, log_structured_event_t event, const char *param, const char *param_value)
+{
+#ifdef ENABLE_SYSTEMD
+	if (!use_journal) {
+		return;
+	}
+
+	char *zone_ascii = knot_dname_to_str_alloc(zone);
+	sd_journal_send("PRIORITY=%d", LOG_INFO,
+			"MESSAGE=%s", "structured",
+			"ZONE=%s", zone_ascii ? zone_ascii : "?",
+			"EVENT=%s", events_table[event],
+			param, param_value, NULL);
+	free(zone_ascii);
+#endif
 }
 
 int log_update_privileges(int uid, int gid)
