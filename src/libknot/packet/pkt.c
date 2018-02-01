@@ -490,8 +490,8 @@ int knot_pkt_put_question(knot_pkt_t *pkt, const knot_dname_t *qname, uint16_t q
 }
 
 _public_
-int knot_pkt_put(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t *rr,
-                 uint16_t flags)
+int knot_pkt_put_rotate(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t *rr,
+                        uint16_t rotate, uint16_t flags)
 {
 	if (pkt == NULL || rr == NULL) {
 		return KNOT_EINVAL;
@@ -527,7 +527,7 @@ int knot_pkt_put(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t *rr,
 	size_t maxlen = pkt_remaining(pkt);
 
 	/* Write RRSet to wireformat. */
-	ret = knot_rrset_to_wire(rr, pos, maxlen, 0, &pkt->compr);
+	ret = knot_rrset_to_wire(rr, pos, maxlen, rotate, &pkt->compr);
 	if (ret < 0) {
 		/* Truncate packet if required. */
 		if (ret == KNOT_ESPACE && !(flags & KNOT_PF_NOTRUNC)) {
