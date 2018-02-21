@@ -646,26 +646,13 @@ static int write_rr(const knot_rrset_t *rrset, uint16_t rrset_index,
 	return write_rdata(rrset, rrset_index, dst, dst_avail, compr);
 }
 
-/*!
- * \brief Write RR Set content to a wire.
- */
-_public_
-int knot_rrset_to_wire(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_size,
+static inline int rot(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_size,
                        uint16_t rotate, struct knot_compr *compr)
 {
-	if (!rrset || !wire) {
-		return KNOT_EINVAL;
-	}
-	if (rrset->rrs.rr_count == 0) {
-		return 0;
-	}
-
 	uint8_t *write = wire;
 	size_t capacity = max_size;
 
-	if (rotate != 0) {
-		rotate %= rrset->rrs.rr_count;
-	}
+	rotate %= rrset->rrs.rr_count;
 	for (uint16_t i = rotate; i < rrset->rrs.rr_count; i++) {
 		int ret = write_rr(rrset, i, &write, &capacity, compr);
 		if (ret != KNOT_EOK) {
@@ -680,6 +667,43 @@ int knot_rrset_to_wire(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_si
 	}
 
 	return write - wire;
+}
+
+static inline int norot(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_size,
+                         struct knot_compr *compr)
+{
+	uint8_t *write = wire;
+	size_t capacity = max_size;
+
+	for (uint16_t i = 0; i < rrset->rrs.rr_count; i++) {
+		int ret = write_rr(rrset, i, &write, &capacity, compr);
+		if (ret != KNOT_EOK) {
+			return ret;
+		}
+	}
+
+	return write - wire;
+}
+
+/*!
+ * \brief Write RR Set content to a wire.
+ */
+_public_
+int knot_rrset_to_wire(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_size,
+                       uint16_t rotate, struct knot_compr *compr)
+{
+	if (!rrset || !wire) {
+		return KNOT_EINVAL;
+	}
+	if (rrset->rrs.rr_count == 0) {
+		return 0;
+	}
+
+	if (rotate == 0) {
+		return norot(rrset, wire, max_size, compr);
+	} else {
+		return rot(rrset, wire, max_size, rotate, compr);
+	}
 }
 
 /*- RRSet from wire ---------------------------------------------------------*/
