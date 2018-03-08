@@ -699,11 +699,11 @@ int knot_rrset_to_wire(const knot_rrset_t *rrset, uint8_t *wire, uint16_t max_si
 		return 0;
 	}
 
-	if (rotate == 0) {
+//	if (rotate == 0) {
 		return norot(rrset, wire, max_size, compr);
-	} else {
-		return rot(rrset, wire, max_size, rotate, compr);
-	}
+//	} else {
+//		return rot(rrset, wire, max_size, rotate, compr);
+//	}
 }
 
 /*- RRSet from wire ---------------------------------------------------------*/
