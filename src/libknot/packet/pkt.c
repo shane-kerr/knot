@@ -527,7 +527,11 @@ int knot_pkt_put_rotate(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t
 	size_t maxlen = pkt_remaining(pkt);
 
 	/* Write RRSet to wireformat. */
-	ret = knot_rrset_to_wire(rr, pos, maxlen, rotate, &pkt->compr);
+	if (rotate == 0 || rr->rrs.rr_count == 1) {
+		ret = knot_rrset_to_wire(rr, pos, maxlen, &pkt->compr);
+	} else {
+		ret = knot_rrset_to_wire_rotate(rr, pos, maxlen, rotate, &pkt->compr);
+	}
 	if (ret < 0) {
 		/* Truncate packet if required. */
 		if (ret == KNOT_ESPACE && !(flags & KNOT_PF_NOTRUNC)) {
