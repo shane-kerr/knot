@@ -252,11 +252,8 @@ int knot_pkt_put_rotate(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t
                         uint16_t rotate, uint16_t flags);
 
 /*! \brief Same as knot_pkt_put_rotate but without rrset rotation. */
-static inline int knot_pkt_put(knot_pkt_t *pkt, uint16_t compr_hint,
-                               const knot_rrset_t *rr, uint16_t flags)
-{
-	return knot_pkt_put_rotate(pkt, compr_hint, rr, 0, flags);
-}
+int knot_pkt_put(knot_pkt_t *pkt, uint16_t compr_hint, const knot_rrset_t *rr,
+                 uint16_t flags);
 
 /*! \brief Get description of the given packet section. */
 static inline const knot_pktsection_t *knot_pkt_section(const knot_pkt_t *pkt,
