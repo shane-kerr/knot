@@ -1,6 +1,6 @@
 Format: 3.0 (quilt)
 Source: knot
-Binary: knot, libknot7, libzscanner1, libdnssec5, libknot-dev, knot-dnsutils, knot-host, knot-doc
+Binary: knot, libknot8, libzscanner1, libdnssec5, libknot-dev, knot-dnsutils, knot-host, knot-doc
 Architecture: any all
 Version: __VERSION__-1
 Maintainer: Knot DNS <knot-dns@lists.nic.cz>
@@ -15,6 +15,6 @@ Package-List:
  knot-host deb net optional arch=any
  libdnssec5 deb libs optional arch=any
  libknot-dev deb libdevel optional arch=any
- libknot7 deb libs optional arch=any
+ libknot8 deb libs optional arch=any
  libzscanner1 deb libs optional arch=any
 Files:
