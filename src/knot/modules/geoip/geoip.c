@@ -27,6 +27,15 @@ static knotd_state_t geoip_process(knotd_state_t state, knot_pkt_t *pkt,
                                    knotd_qdata_t *qdata, knotd_mod_t *mod)
 {
 	assert(pkt && qdata && mod);
+
+	// Geolocate only A or AAAA records.
+	uint16_t qtype = knot_pkt_qtype(qdata->query);
+	if (qtype != KNOT_RRTYPE_A && qtype != KNOT_RRTYPE_AAAA) {
+		return state;
+	}
+
+	// Check if geolocation is available for given query.
+
 	return state;
 }
 
