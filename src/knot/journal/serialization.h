@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include "libknot/rrset.h"
 #include "knot/updates/changesets.h"
+#include "contrib/wire_ctx.h"
 
 typedef struct serialize_ctx serialize_ctx_t;
 
@@ -79,3 +80,7 @@ size_t changeset_serialized_size(const changeset_t *ch);
  */
 int changeset_deserialize(changeset_t *ch, uint8_t *src_chunks[],
                           const size_t *chunks_sizes, size_t chunks_count);
+
+int deserialize_rrset_chunks(wire_ctx_t *wire, knot_rrset_t *rrset,
+                             uint8_t *src_chunks[], const size_t *chunk_sizes,
+                             size_t chunks_count, size_t *cur_chunk);
